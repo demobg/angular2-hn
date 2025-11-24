@@ -33,7 +33,10 @@ export class VisitTrackingService {
   }
 
   private saveVisits(visits: Map<number, number>): void {
-    const obj = Object.fromEntries(visits);
+    const obj: { [key: number]: number } = {};
+    visits.forEach((value, key) => {
+      obj[key] = value;
+    });
     localStorage.setItem(this.STORAGE_KEY, JSON.stringify(obj));
   }
 }
