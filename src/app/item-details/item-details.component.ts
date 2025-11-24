@@ -5,9 +5,11 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { HackerNewsAPIService } from '../shared/services/hackernews-api.service';
 import { SettingsService } from '../shared/services/settings.service';
+import { VisitTrackingService } from '../shared/services/visit-tracking.service';
 
 import { Story } from '../shared/models/story';
 import { Settings } from '../shared/models/settings';
+import { Comment } from '../shared/models/comment';
 
 @Component({
   selector: 'app-item-details',
@@ -23,6 +25,7 @@ export class ItemDetailsComponent implements OnInit {
   constructor(
     private _hackerNewsAPIService: HackerNewsAPIService,
     private _settingsService: SettingsService,
+    private _visitTrackingService: VisitTrackingService,
     private route: ActivatedRoute,
     private _location: Location
   ) {
@@ -34,9 +37,23 @@ export class ItemDetailsComponent implements OnInit {
       let itemID = +params['id'];
       this._hackerNewsAPIService.fetchItemContent(itemID).subscribe(item => {
         this.item = item;
+        const lastVisitTime = this._visitTrackingService.getLastVisit(itemID);
+        if (lastVisitTime && this.item.comments) {
+          this.markNewComments(this.item.comments, lastVisitTime);
+        }
+        this._visitTrackingService.recordVisit(itemID);
       }, error => this.errorMessage = 'Could not load item comments.');
     });
     window.scrollTo(0, 0);
+  }
+
+  markNewComments(comments: Comment[], lastVisit: number) {
+    comments.forEach(comment => {
+      comment.isNew = comment.time * 1000 > lastVisit;
+      if (comment.comments) {
+        this.markNewComments(comment.comments, lastVisit);
+      }
+    });
   }
 
   goBack() {

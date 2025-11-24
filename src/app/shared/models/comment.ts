@@ -7,4 +7,5 @@ export class Comment {
     content: string;
     deleted: boolean;
     comments: Comment[];
+    isNew?: boolean;
 }

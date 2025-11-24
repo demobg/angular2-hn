@@ -1,4 +1,4 @@
-<div *ngIf="!comment.deleted">
+<div *ngIf="!comment.deleted" [class.new-comment]="comment.isNew">
   <div class="meta" [class.meta-collapse]="collapse">
     <span class="collapse" (click)="collapse = !collapse">[{{collapse ? '+' : '-'}}]</span> 
     <a [routerLink]="['/user', comment.user]" routerLinkActive="active">{{comment.user}}</a>
