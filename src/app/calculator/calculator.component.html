@@ -1,0 +1,51 @@
+<div class="calculator-container">
+    <h1>Calculator</h1>
+    
+    <div class="calculator-card">
+        <div class="input-group">
+            <label for="operand1">First Number:</label>
+            <input 
+                type="number" 
+                id="operand1" 
+                [(ngModel)]="operand1" 
+                placeholder="Enter first number"
+                [disabled]="loading"
+            />
+        </div>
+
+        <div class="input-group">
+            <label for="operand2">Second Number:</label>
+            <input 
+                type="number" 
+                id="operand2" 
+                [(ngModel)]="operand2" 
+                placeholder="Enter second number"
+                [disabled]="loading"
+            />
+        </div>
+
+        <div class="button-group">
+            <button (click)="calculate('add')" [disabled]="loading" class="btn btn-add">+</button>
+            <button (click)="calculate('subtract')" [disabled]="loading" class="btn btn-subtract">-</button>
+            <button (click)="calculate('multiply')" [disabled]="loading" class="btn btn-multiply">×</button>
+            <button (click)="calculate('divide')" [disabled]="loading" class="btn btn-divide">÷</button>
+        </div>
+
+        <div class="button-group">
+            <button (click)="clear()" [disabled]="loading" class="btn btn-clear">Clear</button>
+        </div>
+
+        <div class="result-section" *ngIf="result !== null || message">
+            <div class="result" *ngIf="result !== null">
+                <strong>Result:</strong> {{ result }}
+            </div>
+            <div class="message" [class.error]="message && message.includes('Error')">
+                {{ message }}
+            </div>
+        </div>
+
+        <div class="loader" *ngIf="loading">
+            Calculating...
+        </div>
+    </div>
+</div>
